@@ -1,30 +1,15 @@
+// Answer for Task 1: There are some values in the counter 
+// that doesn't increase or appears more than once is because
+// multi-threading may run the same value at the same time if no
+// locking mechanism is used to prevent from duplicate/skipping
+// results.
 
-public class SimpleThread extends Thread{
-
-	Resource resource;
+public class SimpleThread {
 	
-	public void run() {
-		for(int i = 0; i<10; i++){
-			try {
-			System.out.println(resource.increment());
-			
-			Thread.sleep(1);
-			
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
-	SimpleThread(Resource resource){
-		this.resource = resource;
-	}
-
 	public static void main(String args[]) {
 		Resource resource = new Resource();
-		Thread t = new SimpleThread(resource);
-		Thread s = new SimpleThread(resource);
+		Thread t = new Thread(resource);
+		Thread s = new Thread(resource);
 		
 		t.start();
 		s.start();
