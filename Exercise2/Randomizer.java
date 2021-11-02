@@ -21,8 +21,8 @@ public class Randomizer implements Runnable{
 	
 	public synchronized int generateRandom() {
 		int rand = (int)(Math.random() * (max-min+1))+min;
-		this.value.add(rand); // all generated random numbers will be appended to ArrayList
-		sum += rand; //as random numbers are generated, it sums up as it goes
+		this.value.add(rand);// all generated random numbers will be appended to ArrayList
+		sum += rand;//as random numbers are generated, it sums up as it goes
 		return rand;
 	}
 	

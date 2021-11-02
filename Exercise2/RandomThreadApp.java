@@ -1,9 +1,18 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author MELISSA LIAO
  *
  */
 public class RandomThreadApp {
+	
+	private ExecutorService pool;
+	
+	public RandomThreadApp() {
+		this.pool = Executors.newFixedThreadPool(5);
+	}
 	
 	public static void main(String args[]) {
 		int min = 1;
@@ -13,29 +22,21 @@ public class RandomThreadApp {
 		// multiple random numbers
 		Randomizer r = new Randomizer(min, max);
 		
-		// 5 different threads will run the same
-		// Randomizer class to generate a random number
-		Thread t1 = new Thread(r);
-		Thread t2 = new Thread(r);
-		Thread t3 = new Thread(r);
-		Thread t4 = new Thread(r);
-		Thread t5 = new Thread(r);
+		// One thread pool is used to run the randomizer
+		RandomThreadApp t = new RandomThreadApp();
 		
-		t1.start();
-		t2.start();
-		t3.start();
-		t4.start();
-		t5.start();
-		
-		try { // Join function is called in to run all threads first
-			t1.join();
-			t2.join();
-			t3.join();
-			t4.join();
-			t5.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Thread pool creates and executes 5 threads
+		for(int i = 0; i < 5; i++)
+			t.pool.execute(r);
+
+		try {     
+			t.pool.shutdown(); // Thread pool shutdown once finishes running randomizer
+	         while (!t.pool.awaitTermination(24L, TimeUnit.HOURS)) {
+	             System.out.println("Not yet. Still waiting for termination");
+	         }                
+	    }catch(InterruptedException e){
+	        e.printStackTrace();
+	    }
 		
 		// After all threads had finished running, main thread will print out 
 		// all random values stored from ArrayList in Randomizer class
@@ -45,8 +46,7 @@ public class RandomThreadApp {
 		
 		// Call in the sum variable to retrieve the sum all generated random values
 		System.out.println("\nSum of random numbers = " + r.getSum());
-		
-
+			
 	}
 
 }
